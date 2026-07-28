@@ -1,0 +1,75 @@
+{
+  "name": "codex-context-pilot",
+  "version": "0.1.0",
+  "description": "Local-first repository context optimizer for coding agents",
+  "type": "module",
+  "license": "MIT",
+  "author": "OpenCorex",
+  "homepage": "https://github.com/opencorex-org/context-pilot#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opencorex-org/context-pilot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/opencorex-org/context-pilot/issues"
+  },
+  "keywords": [
+    "codex",
+    "context",
+    "mcp",
+    "model-context-protocol",
+    "repository",
+    "developer-tools",
+    "cli"
+  ],
+  "files": [
+    "dist/",
+    "docs/",
+    "README.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "RELEASE.md"
+  ],
+  "main": "./dist/packages/core/src/index.js",
+  "types": "./dist/packages/core/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/packages/core/src/index.d.ts",
+      "import": "./dist/packages/core/src/index.js"
+    }
+  },
+  "bin": {
+    "context-pilot": "dist/apps/cli/src/index.js"
+  },
+  "scripts": {
+    "build": "node scripts/clean.mjs && tsc -p tsconfig.build.json && node scripts/make-executable.mjs",
+    "context-pilot": "tsx apps/cli/src/index.ts",
+    "mcp": "tsx servers/mcp-server/src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "quality": "npm run typecheck && npm test",
+    "check": "npm run quality",
+    "release:check": "npm test && node scripts/verify-package.mjs --source",
+    "release:rehearse": "node scripts/rehearse-release.mjs",
+    "prepack": "npm run build && node scripts/verify-package.mjs",
+    "prepublishOnly": "npm run release:check"
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

@@ -1,0 +1,7 @@
+node_modules/
+.pnpm-store/
+dist/
+.context-pilot/
+artifacts/*.tgz
+*.log
+.DS_Store
