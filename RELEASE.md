@@ -55,9 +55,12 @@ Add an npm automation or granular access token as the repository secret
 `NPM_TOKEN`, then:
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git fetch upstream main
+git tag --annotate v0.1.0 upstream/main --message "Release v0.1.0"
+git push upstream refs/tags/v0.1.0
 ```
 
-Do not create or push the tag until the package name, npm ownership, changelog,
-and release checks have been confirmed.
+Use the package version from `package.json` as the tag version. The explicit
+`refs/tags/` push prevents a same-named branch from being pushed accidentally.
+Do not create or push the tag until `NPM_TOKEN`, npm package ownership,
+changelog, and release checks have been confirmed.
