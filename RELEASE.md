@@ -16,8 +16,12 @@ must not be used for this project.
 npm login
 pnpm install --frozen-lockfile
 pnpm release:check
-npm publish
+NPM_CONFIG_PROVENANCE=false npm publish --access public
 ```
+
+Local terminals do not provide a supported CI identity for npm provenance.
+Disable provenance only for the interactive bootstrap publication. GitHub
+Actions enables provenance explicitly in its `npm publish` command.
 
 `release:check` runs the dependency-free Node.js tests and verifies the files
 required by the published package. `pnpm quality` additionally runs the
