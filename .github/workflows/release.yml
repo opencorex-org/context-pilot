@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   publish:
+    if: github.repository == 'opencorex-org/context-pilot'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

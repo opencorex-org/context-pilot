@@ -48,6 +48,9 @@ Restart the Codex app and enter `/mcp` to verify the server.
 ## GitHub release
 
 The workflow in `.github/workflows/release.yml` publishes tags matching `v*`.
+The publish job runs only in the canonical `opencorex-org/context-pilot`
+repository; matching tags in forks are skipped.
+
 Add an npm automation or granular access token as the repository secret
 `NPM_TOKEN`, then:
 
