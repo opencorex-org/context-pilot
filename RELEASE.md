@@ -51,8 +51,13 @@ The workflow in `.github/workflows/release.yml` publishes tags matching `v*`.
 The publish job runs only in the canonical `opencorex-org/context-pilot`
 repository; matching tags in forks are skipped.
 
-Add an npm automation or granular access token as the repository secret
-`NPM_TOKEN`, then:
+For the first publication, create a granular npm access token with:
+
+- read and write package permission;
+- permission to publish `codex-context-pilot`;
+- **Bypass two-factor authentication** enabled.
+
+Add that token as the upstream repository Actions secret `NPM_TOKEN`, then:
 
 ```bash
 git fetch upstream main
@@ -64,3 +69,35 @@ Use the package version from `package.json` as the tag version. The explicit
 `refs/tags/` push prevents a same-named branch from being pushed accidentally.
 Do not create or push the tag until `NPM_TOKEN`, npm package ownership,
 changelog, and release checks have been confirmed.
+
+### `EOTP` in GitHub Actions
+
+An `EOTP` error means npm accepted the credential but requires an interactive
+one-time password. GitHub Actions cannot complete that prompt. Recreate the
+granular token with **Bypass two-factor authentication** enabled, replace the
+`NPM_TOKEN` secret, and rerun the failed publish job.
+
+Do not store a one-time password as a GitHub secret. OTP values expire and are
+not a CI authentication mechanism.
+
+## Trusted publishing after the first release
+
+After `codex-context-pilot` exists on npm, migrate the workflow to npm Trusted
+Publishing so releases use short-lived GitHub OIDC credentials instead of a
+long-lived write token.
+
+In the npm package's **Settings → Trusted Publisher**, configure:
+
+- provider: GitHub Actions;
+- organization: `opencorex-org`;
+- repository: `context-pilot`;
+- workflow filename: `release.yml`;
+- allowed action: `npm publish`.
+
+The workflow already grants `id-token: write` and uses a GitHub-hosted runner.
+After one successful trusted-publishing release:
+
+1. remove `NODE_AUTH_TOKEN` from the publish step;
+2. delete the upstream `NPM_TOKEN` Actions secret;
+3. revoke the npm write token;
+4. configure the npm package to disallow traditional token publishing.
